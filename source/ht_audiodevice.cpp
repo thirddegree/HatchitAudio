@@ -28,6 +28,8 @@ namespace Hatchit
         {
             if (m_context)
             {
+                if(alcGetCurrentContext() == m_context)
+                    alcMakeContextCurrent(nullptr);
                 alcDestroyContext(m_context);
             }
             if (m_instance)
