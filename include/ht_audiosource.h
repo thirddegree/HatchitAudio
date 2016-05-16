@@ -15,17 +15,16 @@
 #pragma once
 
 #include <ht_platform.h> //HT_API
-#include <ht_refcounted.h> //Core::RefCounted<T>
-#include <ht_guid.h> //Core::Guid
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <ht_audiobuffer.h> //BufferHandle
+#include <array> //std::array
 
 namespace Hatchit
 {
     namespace Audio
     {
-        class HT_API Source final : public Core::RefCounted<Source>
+        class HT_API Source
         {
         public:
 
@@ -38,22 +37,43 @@ namespace Hatchit
                 Error = AL_INVALID_OPERATION
             };
 
-            Source(Core::Guid ID);
+            Source();
+            Source(const Source& source);
+            Source(Source&& source);
             virtual ~Source();
 
-            //Required function for all refCounted classes
+            Source& operator=(Source&& source);
+            Source& operator=(const Source& source);
+
             bool Initialize();
+            void DeInitialize();
 
             bool Play();
             bool Pause();
             bool Stop();
             bool Rewind();
 
-            bool QueueBuffer(BufferHandle b);
-            bool UnqueueBuffer(BufferHandle b);
+            bool QueueBuffer(const Buffer& b);
+            bool UnqueueBuffer(Buffer& b);
 
+            //Getters
+            void GetPosition(std::array<ALfloat, 3>& outValueArray) const;
+            void GetPosition(ALfloat* outValueArray) const;
+            void GetDirection(std::array<ALfloat, 3>& outValueArray) const;
+            void GetDirection(ALfloat* outValueArray) const;
+
+            ALfloat GetPitch() const;
+            ALfloat GetGain() const;
+            bool GetLooping() const;
+
+            State GetState() const;
+            int GetNumBuffersQueued() const;
+            int GetNumBuffersProcessed() const;
+
+            bool SetPosition(const std::array<ALfloat, 3>& values);
             bool SetPosition(const ALfloat* values);
             bool SetPosition(ALfloat x, ALfloat y, ALfloat z);
+            bool SetDirection(const std::array<ALfloat, 3>& values);
             bool SetDirection(const ALfloat* values);
             bool SetDirection(ALfloat x, ALfloat y, ALfloat z);
 
@@ -61,11 +81,8 @@ namespace Hatchit
             bool SetGain(ALfloat newGain);
             bool SetLooping(bool newVal);
 
-            State GetState();
-            int GetNumBuffersQueued();
-            int GetNumBuffersProcessed();
-
         private:
+            bool CopyInfo(const Source& source);
             ALuint m_source;
         };
     }

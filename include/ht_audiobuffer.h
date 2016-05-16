@@ -15,8 +15,7 @@
 #pragma once
 
 #include <ht_platform.h> //HT_API
-#include <ht_refcounted.h> //Core::RefCounted<T>
-#include <ht_guid.h> //Core::Guid
+#include <ht_noncopy.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 
@@ -24,9 +23,11 @@ namespace Hatchit
 {
     namespace Audio
     {
-        class HT_API Buffer final : public Core::RefCounted<Buffer>
+        class HT_API Buffer : public Core::INonCopy
         {
         public:
+            static constexpr size_t BufferSize = 2048;
+
             enum class Format : ALenum
             {
                 Mono8 = AL_FORMAT_MONO8,
@@ -35,11 +36,16 @@ namespace Hatchit
                 Stereo16 = AL_FORMAT_STEREO16
             };
 
-            Buffer(Core::Guid ID);
+            Buffer();
+            Buffer(const Buffer&) = delete;
+            Buffer(Buffer&& buffer);
             virtual ~Buffer();
 
-            //Required function for all refCounted classes
+            Buffer& operator=(const Buffer&) = delete;
+            Buffer& operator=(Buffer&& buffer);
+
             bool Initialize();
+            void DeInitialize();
 
             bool SetData(
                 Format format,
@@ -47,13 +53,15 @@ namespace Hatchit
                 ALsizei dataSize,
                 ALsizei frequency);
 
+            size_t GetBufferSize() const;
+
         private:
             friend class Source;
+            const ALuint& GetBuffer() const;
             ALuint& GetBuffer();
 
             ALuint m_buffer;
+            size_t m_bufferSize;
         };
-
-        using BufferHandle = Core::Handle<Buffer>;
     }
 }
