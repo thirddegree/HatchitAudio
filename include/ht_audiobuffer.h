@@ -16,6 +16,7 @@
 
 #include <ht_platform.h> //HT_API
 #include <ht_noncopy.h>
+#include <cstdlib>
 #include <AL/al.h>
 #include <AL/alc.h>
 
