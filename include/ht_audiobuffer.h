@@ -26,7 +26,7 @@ namespace Hatchit
         class HT_API Buffer : public Core::INonCopy
         {
         public:
-            static constexpr size_t BufferSize = 2048;
+            static constexpr size_t BufferSize = 4096;
 
             enum class Format : ALenum
             {
