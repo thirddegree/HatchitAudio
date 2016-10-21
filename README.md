@@ -1,8 +1,5 @@
 # HatchitAudio
 
-[![Documentation](https://codedocs.xyz/thirddegree/HatchitAudio.svg)](https://codedocs.xyz/thirddegree/HatchitAudio/)
-[![Join the chat at https://gitter.im/thirddegree/HatchitDiscussion](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thirddegree/HatchitDiscussion)
-
 The audio library powering [Hatchit](https://github.com/thirddegree/Hatchit)
 
 ---
